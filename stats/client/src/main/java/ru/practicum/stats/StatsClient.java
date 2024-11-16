@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface StatsClient {
 
-    List<ElementStatsResponseDto> getStats(String start, String end, List<String> uris, Boolean unique);
+    List<ElementStatsResponseDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique);
 
     void saveHit(String app, String uri, String ip, LocalDateTime createdDate);
 

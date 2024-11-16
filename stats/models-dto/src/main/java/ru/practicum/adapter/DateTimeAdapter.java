@@ -9,4 +9,8 @@ public class DateTimeAdapter {
     public static LocalDateTime stringToLocalDateTime(String dateTimeString) {
         return LocalDateTime.parse(dateTimeString, formatter);
     }
+
+    public static String toString(LocalDateTime dateTime) {
+        return dateTime.format(formatter);
+    }
 }
