@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.category.model.Category;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category,Integer> {
+public interface CategoryRepository extends JpaRepository<Category, Integer> {
     boolean existsByName(String name);
 }

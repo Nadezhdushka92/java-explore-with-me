@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-public interface EventRepository extends JpaRepository<Event,Integer> {
-    @Query("SELECT e FROM Event e WHERE e.initiatorId = :initiatorId")
+public interface EventRepository extends JpaRepository<Event, Integer> {
+    @Query("SELECT e FROM Event e WHERE e.initiator.id = :initiatorId")
     List<Event> findByInitiatorId(@Param("initiatorId") Integer initiatorId, Pageable pageable);
 
     Set<Event> findByIdIn(List<Integer> ids);

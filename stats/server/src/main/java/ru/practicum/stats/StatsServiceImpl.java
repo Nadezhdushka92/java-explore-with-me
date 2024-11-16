@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.adapter.DateTimeAdapter;
+import ru.practicum.stats.exception.DataNotValidException;
 import ru.practicum.stats.mapper.ElementStatsMapper;
 import ru.practicum.stats.model.Stats;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class StatsServiceImpl implements StatsService {
     private final StatsRepository statsRepository;
 
+    @SuppressWarnings("checkstyle:Regexp")
     @Override
     public List<ElementStatsResponseDto> getStatsFromService(String start, String end, List<String> uris, boolean unique) {
 
@@ -29,6 +31,10 @@ public class StatsServiceImpl implements StatsService {
                 URLDecoder.decode(start, StandardCharsets.UTF_8));
         LocalDateTime endTime = DateTimeAdapter.stringToLocalDateTime(
                 URLDecoder.decode(end, StandardCharsets.UTF_8));
+
+        if (startTime.isAfter(endTime)) {
+            throw new DataNotValidException("Incorrect Time");
+        }
 
         List<Stats> stats = fetchStats(startTime, endTime, uris, unique);
         return mapToResponseDto(stats);
