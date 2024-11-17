@@ -33,6 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category newCategory = CategoryMapper.mapCategory(categoryDto);
         categoryRepository.save(newCategory);
+
         log.info("Create new category {}", newCategory);
         return CategoryMapper.mapCategoryDto(newCategory);
     }
@@ -47,8 +48,8 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ConflictException("Exists events, assigned with this category", "");
         }
 
-        categoryRepository.deleteById(catId);
         log.info("Delete category id {}", catId);
+        categoryRepository.deleteById(catId);
     }
 
     @Override
