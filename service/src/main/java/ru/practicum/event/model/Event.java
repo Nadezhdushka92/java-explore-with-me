@@ -21,6 +21,9 @@ public class Event {
    private Integer id;
 
    @Column(nullable = false)
+   private String title;
+
+   @Column(nullable = false)
    private String annotation;
 
    @ManyToOne(fetch = FetchType.LAZY)
@@ -30,14 +33,14 @@ public class Event {
    @Column(nullable = false, name = "confirmed_requests")
    private Integer confirmedRequests;
 
-   @Column(nullable = false, name = "created_on")
-   private LocalDateTime createdOn;
-
    @Column(nullable = false)
    private String description;
 
    @Column(nullable = false, name = "event_date")
    private LocalDateTime eventDate;
+
+   @Column(nullable = false, name = "created_on")
+   private LocalDateTime createdOn;
 
    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
    @JoinColumn(nullable = false, name = "initiator_id")
@@ -51,7 +54,7 @@ public class Event {
    private Boolean paid;
 
    @Column(nullable = false, name = "participant_limit")
-   private int participantLimit;
+   private Integer participantLimit;
 
    @Column(name = "published_on")
    private LocalDateTime publishedOn;
@@ -62,7 +65,4 @@ public class Event {
    @Enumerated(EnumType.STRING)
    @Column(nullable = false)
    private State state;
-
-   @Column(nullable = false)
-   private String title;
 }

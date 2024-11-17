@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+@SuppressWarnings("checkstyle:Regexp")
 @Entity
 @Table(name = "stats")
 @Getter
@@ -15,13 +16,17 @@ import java.time.LocalDateTime;
 public class Stats {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
+
     @Column(nullable = false)
     private String app;
+
     @Column(nullable = false)
     private String uri;
+
     @Column(nullable = false)
     private String ip;
+
     @Column(nullable = false, name = "created_date")
     private LocalDateTime createdDate;
 }

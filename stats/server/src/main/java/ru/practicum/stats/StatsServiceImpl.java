@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class StatsServiceImpl implements StatsService {
     private final StatsRepository statsRepository;
 
-    @SuppressWarnings("checkstyle:Regexp")
     @Override
     public List<ElementStatsResponseDto> getStatsFromService(String start, String end, List<String> uris, boolean unique) {
 
@@ -36,8 +35,7 @@ public class StatsServiceImpl implements StatsService {
             throw new DataNotValidException("Incorrect Time");
         }
 
-        List<Stats> stats = fetchStats(startTime, endTime, uris, unique);
-        return mapToResponseDto(stats);
+        return fetchStats(startTime, endTime, uris, unique);
     }
 
     //Метод для преобразования ответа в ElementStatsResponseDto
@@ -71,7 +69,7 @@ public class StatsServiceImpl implements StatsService {
     }
 
     //Получение статистики из БД
-    private List<Stats> fetchStats(LocalDateTime startTime, LocalDateTime endTime, List<String> uris, boolean unique) {
+    private List<ElementStatsResponseDto> fetchStats(LocalDateTime startTime, LocalDateTime endTime, List<String> uris, boolean unique) {
             boolean hasUris = (uris != null && !uris.isEmpty());
 
             if (unique) {
