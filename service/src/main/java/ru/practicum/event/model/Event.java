@@ -5,6 +5,8 @@ import lombok.*;
 import ru.practicum.category.model.Category;
 import ru.practicum.user.model.User;
 
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @SuppressWarnings("checkstyle:Regexp")
@@ -20,9 +22,11 @@ public class Event {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Integer id;
 
+   @Size(min = 3, max = 120)
    @Column(nullable = false)
    private String title;
 
+   @Size(min = 20, max = 2000)
    @Column(nullable = false)
    private String annotation;
 
@@ -33,6 +37,7 @@ public class Event {
    @Column(nullable = false, name = "confirmed_requests")
    private Integer confirmedRequests;
 
+   @Size(min = 20, max = 7000)
    @Column(nullable = false)
    private String description;
 
@@ -53,6 +58,7 @@ public class Event {
    @Column(nullable = false)
    private Boolean paid;
 
+   @PositiveOrZero
    @Column(nullable = false, name = "participant_limit")
    private Integer participantLimit;
 

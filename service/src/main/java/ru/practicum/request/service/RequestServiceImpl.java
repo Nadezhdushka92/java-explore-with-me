@@ -45,7 +45,7 @@ public class RequestServiceImpl implements RequestService {
         requestRepository.findByRequesterId(userId);
 
         if (requestRepository.existsByRequesterIdAndEventId(userId, eventId)) {
-            throw new ConflictException("Request nave already", "");
+            throw new ConflictException("Request have already", "");
         }
 
         if (event.getInitiator().getId() == (userId)) {

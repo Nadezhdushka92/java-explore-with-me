@@ -242,6 +242,7 @@ public class EventServiceImpl implements EventService {
 
     }
 
+    @SuppressWarnings("checkstyle:Regexp")
     @Override
     public EventFullDto patchAdminEvent(int eventId, UpdateEventRequest updateEvent) {
         Event event = eventRepository.findById(eventId).orElseThrow(() ->

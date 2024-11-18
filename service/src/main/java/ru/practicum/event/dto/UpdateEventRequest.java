@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
 
@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class UpdateEventRequest {
-    @Positive
+    @PositiveOrZero
     private Integer participantLimit;
 
     @Size(min = 20, max = 7000)
