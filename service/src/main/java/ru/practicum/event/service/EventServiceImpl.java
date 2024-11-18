@@ -8,8 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import ru.practicum.adapter.DateTimeAdapter;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
@@ -45,7 +43,6 @@ import static ru.practicum.event.model.QEvent.event;
 
 @Slf4j
 @Service
-@Validated
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
     private final String thisService = "ewm-main-service";
@@ -104,7 +101,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @Transactional
     public EventFullDto updateEvent(int userId, int eventId, UpdateEventRequest updateEventRequest) {
         Event event = eventRepository.findById(eventId).orElseThrow(() ->
                 new NotFoundException("Event not found", ""));
@@ -248,7 +244,6 @@ public class EventServiceImpl implements EventService {
 
     @SuppressWarnings("checkstyle:Regexp")
     @Override
-    @Transactional
     public EventFullDto patchAdminEvent(int eventId, UpdateEventRequest updateEvent) {
         Event event = eventRepository.findById(eventId).orElseThrow(() ->
                 new NotFoundException("Событие не найдено", ""));

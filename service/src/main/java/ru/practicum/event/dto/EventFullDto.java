@@ -16,19 +16,21 @@ import jakarta.validation.constraints.*;
 public class EventFullDto {
     @Size(min = 20, max = 2000)
     @NotNull
-    @NotBlank
+    @NotEmpty
     private String annotation;
 
     @NotNull
     private CategoryDto category;
 
     @NotNull
+    @NotEmpty
     private String eventDate;
 
     @NotNull
     private UserShortDto initiator;
 
     @NotNull
+    @NotEmpty
     private LocationDto location;
 
     private Boolean paid;
@@ -51,7 +53,6 @@ public class EventFullDto {
     private String description;
 
     @PositiveOrZero
-    @Min(value = 0)
     private Integer participantLimit;
 
     private String publishedOn;

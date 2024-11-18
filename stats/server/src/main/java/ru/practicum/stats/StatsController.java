@@ -25,7 +25,7 @@ public class StatsController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/hit")
-    public void saveHit(@Valid @RequestBody ElementStatsSaveDto statsSaveDto) {
+    public void saveHit(@RequestBody @Valid ElementStatsSaveDto statsSaveDto) {
         statsService.saveHit(statsSaveDto);
     }
 }

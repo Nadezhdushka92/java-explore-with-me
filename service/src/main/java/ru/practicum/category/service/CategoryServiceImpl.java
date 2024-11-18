@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.category.dto.NewCategoryDto;
 import ru.practicum.category.mapper.CategoryMapper;
@@ -20,7 +19,6 @@ import java.util.List;
 
 @SuppressWarnings("checkstyle:Regexp")
 @Slf4j
-@Validated
 @RequiredArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
