@@ -15,9 +15,8 @@ public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)//400
     @ExceptionHandler(value = {ValidationException.class, MethodArgumentNotValidException.class,
-            NumberFormatException.class, DataIntegrityViolationException.class})
+            NumberFormatException.class, DataIntegrityViolationException.class, CustomValidationException.class})
     public ApiError handleValidation(final Exception exception) {
-
         return ApiError.builder()
                 .message(exception.getMessage())
                 .status(HttpStatus.BAD_REQUEST.toString())

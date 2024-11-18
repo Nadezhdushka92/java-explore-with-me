@@ -37,7 +37,7 @@ public class PrivateEventController {
 
     @PatchMapping("/{eventId}")
     public EventFullDto updateEvent(@PathVariable int userId, @PathVariable int eventId,
-                                    @Valid @RequestBody UpdateEventRequest updateEventRequest) {
+                                    @RequestBody @Valid UpdateEventRequest updateEventRequest) {
         return privateEventService.updateEvent(userId, eventId, updateEventRequest);
     }
 
@@ -49,7 +49,7 @@ public class PrivateEventController {
     @PatchMapping("/{eventId}/requests")
     public EventRequestStatusUpdateResult updateStatusRequestForEvent(@PathVariable int userId,
                                                                       @PathVariable int eventId,
-                                                                      @Valid @RequestBody EventRequestStatusUpdateRequest
+                                                                      @RequestBody @Valid EventRequestStatusUpdateRequest
                                                                               statusUpdateRequest) {
         return privateEventService.updateStatusRequestForEvent(userId, eventId, statusUpdateRequest);
     }

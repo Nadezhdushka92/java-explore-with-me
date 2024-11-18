@@ -5,8 +5,8 @@ import lombok.*;
 import ru.practicum.category.model.Category;
 import ru.practicum.user.model.User;
 
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @SuppressWarnings("checkstyle:Regexp")

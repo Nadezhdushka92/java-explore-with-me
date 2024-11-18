@@ -8,7 +8,7 @@ import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.category.dto.NewCategoryDto;
 import ru.practicum.category.service.CategoryService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @Slf4j
 @RestController
@@ -31,7 +31,7 @@ public class AdminCategoryController {
 
     @PatchMapping("/{catId}")
     public CategoryDto updateCategory(@PathVariable int catId,
-                                      @Valid @RequestBody CategoryDto category) {
+                                      @RequestBody @Valid CategoryDto category) {
         return categoryService.updateCategory(catId, category);
     }
 }

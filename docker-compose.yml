@@ -27,7 +27,6 @@ services:
       timeout: 10s
       interval: 5s
 
-
   stats-server:
     build: stats/server
     image: stats-server

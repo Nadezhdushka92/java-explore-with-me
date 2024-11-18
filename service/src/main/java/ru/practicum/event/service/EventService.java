@@ -9,6 +9,8 @@ import ru.practicum.event.dto.NewEventDto;
 import ru.practicum.event.dto.UpdateEventRequest;
 import ru.practicum.request.dto.ParticipationRequestDto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public interface EventService {
@@ -19,7 +21,7 @@ public interface EventService {
 
     EventFullDto getEvent(int userId, int eventId);
 
-    EventFullDto updateEvent(int userId, int eventId, UpdateEventRequest updateEventRequest);
+    EventFullDto updateEvent(int userId, int eventId, @NotNull @Valid UpdateEventRequest updateEventRequest);
 
     List<ParticipationRequestDto> getRequestForEvent(int userId, int eventId);
 
@@ -29,7 +31,7 @@ public interface EventService {
     List<EventFullDto> getAdminEvents(List<Integer> users, List<String> states, List<Integer> categories, String rangeStart,
                                       String rangeEnd, int from, int size);
 
-    EventFullDto patchAdminEvent(int eventId, UpdateEventRequest updateEvent);
+    EventFullDto patchAdminEvent(int eventId,@NotNull @Valid UpdateEventRequest updateEvent);
 
     List<EventShortDto> getPublicEvents(String text,
                                         List<Integer> categories,
