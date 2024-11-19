@@ -1,9 +1,11 @@
 package ru.practicum.stats.mapper;
 
+import org.springframework.stereotype.Component;
 import ru.practicum.stats.ElementStatsResponseDto;
 import ru.practicum.stats.ElementStatsSaveDto;
 import ru.practicum.stats.model.Stats;
 
+@Component
 public class ElementStatsMapper {
     public static ElementStatsResponseDto mapToStatsDto(Stats stats, Long hits) {
         return ElementStatsResponseDto.builder()
@@ -18,7 +20,7 @@ public class ElementStatsMapper {
                 .app(statsSaveDto.getApp())
                 .uri(statsSaveDto.getUri())
                 .ip(statsSaveDto.getIp())
-                .createdDate(statsSaveDto.getCreatedDate())
+                .timestamp(statsSaveDto.getTimestamp())
                 .build();
     }
 }

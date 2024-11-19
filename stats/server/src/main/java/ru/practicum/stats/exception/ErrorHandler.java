@@ -11,7 +11,7 @@ public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {DataNotValidException.class, MethodArgumentNotValidException.class})
-    public ErrorResponse handleValidationException(final DataNotValidException exception) {
+    public ErrorResponse handleValidationException(final RuntimeException exception) {
         return new ErrorResponse("Validation Error", exception.getMessage());
     }
 }

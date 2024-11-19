@@ -1,6 +1,8 @@
 package ru.practicum.stats.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -27,6 +29,8 @@ public class Stats {
     @Column(nullable = false)
     private String ip;
 
-    @Column(nullable = false, name = "created_date")
-    private LocalDateTime createdDate;
+    @PastOrPresent
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(nullable = false)
+    private LocalDateTime timestamp;
 }

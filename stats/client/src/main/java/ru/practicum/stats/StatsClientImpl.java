@@ -74,14 +74,14 @@ public class StatsClientImpl implements StatsClient {
     public void saveHit(String app,
                         String uri,
                         String ip,
-                        LocalDateTime createDate) {
+                        LocalDateTime timestamp) {
         String url = serverUri + "/hit";
 
         ElementStatsSaveDto statsSaveDto = ElementStatsSaveDto.builder()
                 .app(app)
                 .uri(uri)
                 .ip(ip)
-                .createdDate(createDate)
+                .timestamp(timestamp)
                 .build();
         HttpEntity<ElementStatsSaveDto> entity = createHttpEntity(statsSaveDto);
 

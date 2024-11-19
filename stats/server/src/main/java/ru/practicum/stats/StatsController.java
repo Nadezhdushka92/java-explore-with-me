@@ -15,8 +15,8 @@ public class StatsController {
 
     @GetMapping("/stats")
     public List<ElementStatsResponseDto> getStatsFromService(
-            @Valid @RequestParam String start,
-            @Valid @RequestParam String end,
+            @RequestParam String start,
+            @RequestParam String end,
             @RequestParam(required = false) List<String> uris,
             @RequestParam(required = false, defaultValue = "false") boolean unique
     ) {
