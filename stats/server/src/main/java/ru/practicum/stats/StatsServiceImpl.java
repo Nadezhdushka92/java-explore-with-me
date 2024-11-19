@@ -92,6 +92,6 @@ public class StatsServiceImpl implements StatsService {
         statsSaveDto.setCreatedDate(LocalDateTime.now());
         Stats newElementStats = ElementStatsMapper.mapToStats(statsSaveDto);
         statsRepository.save(newElementStats);
-        log.info("Хит сохранен в БД");
+        log.info("Hit saved");
     }
 }
