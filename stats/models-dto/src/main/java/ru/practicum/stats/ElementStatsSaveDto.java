@@ -29,7 +29,6 @@ public class ElementStatsSaveDto {
     @NotEmpty
     private String ip;
 
-    @NotEmpty
     @NotNull
     private LocalDateTime createdDate;
 }
