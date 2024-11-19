@@ -37,7 +37,6 @@ public class EventFullDto {
 
     @Size(min = 3, max = 120)
     @NotBlank
-    @NotNull
     private String title;
 
     @NotNull
@@ -47,8 +46,6 @@ public class EventFullDto {
 
     private Integer confirmedRequests;
 
-    @NotNull
-    @NotBlank
     @Size(min = 20, max = 7000)
     private String description;
 
