@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class NewEventDto {
+public class CreateEventDto {
     @NotNull
     @NotEmpty
     @NotBlank

@@ -45,7 +45,7 @@ import static ru.practicum.event.model.QEvent.event;
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
-    private final String thisService = "ewm-main-service";
+    private static final String APPLICATION = "ewm-main-service";
     private final EventRepository eventRepository;
     private final StatsClient statsClient;
     private final CategoryRepository categoryRepository;
@@ -69,21 +69,21 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto createEvent(int userId, NewEventDto newEventDto) {
+    public EventFullDto createEvent(int userId, CreateEventDto createEventDto) {
         User initiator = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("User not found", ""));
 
-        if (isCheckinEventTime(newEventDto.getEventDate())) {
+        if (isCheckinEventTime(createEventDto.getEventDate())) {
             throw new ValidationException("Incorrect data", "");
         }
 
-        Category category = categoryRepository.findById(newEventDto.getCategory()).orElseThrow(() ->
+        Category category = categoryRepository.findById(createEventDto.getCategory()).orElseThrow(() ->
                 new NotFoundException("Category not found", ""));
 
-        locationRepository.save(LocationMapper.mapLocation(newEventDto.getLocation()));
+        locationRepository.save(LocationMapper.mapLocation(createEventDto.getLocation()));
 
-        Event newEvent = EventMapper.createToEvent(newEventDto, category, initiator);
-        Event createEvent = eventRepository.save(newEvent);
+        Event createdEvent = EventMapper.createToEvent(createEventDto, category, initiator);
+        Event createEvent = eventRepository.save(createdEvent);
 
         Map<Integer, Long> viewsMap = getViews(List.of(createEvent));
 
@@ -206,7 +206,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventFullDto> getAdminEvents(List<Integer> users, List<String> states, List<Integer> categories, String rangeStart, String rangeEnd, int from, int size) {
+    public List<EventFullDto> getListAdminEvents(List<Integer> users, List<String> states, List<Integer> categories, String rangeStart, String rangeEnd, int from, int size) {
         QEvent event = QEvent.event;
 
         BooleanExpression predicate = event.isNotNull();
@@ -261,14 +261,14 @@ public class EventServiceImpl implements EventService {
                 : null;
 
         Event updatedEvent = EventMapper.adminUpdateEvent(event, updateEvent, category, state, location);
-        Event newEvent = eventRepository.save(updatedEvent);
-        Map<Integer, Long> viewsMap = getViews(List.of(newEvent));
+        Event savedEvent = eventRepository.save(updatedEvent);
+        Map<Integer, Long> viewsMap = getViews(List.of(savedEvent));
 
-        return EventMapper.toEventFullDto(newEvent, viewsMap);
+        return EventMapper.toEventFullDto(savedEvent, viewsMap);
     }
 
     @Override
-    public List<EventShortDto> getPublicEvents(String text,
+    public List<EventShortDto> getListPublicEvents(String text,
                                                List<Integer> categories,
                                                Boolean paid,
                                                String rangeStart,
@@ -316,7 +316,7 @@ public class EventServiceImpl implements EventService {
         Map<Integer, Long> viewsMpa = getViews(events);
 
         // Сохранение статистики
-        statsClient.saveHit(thisService, request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
+        statsClient.saveHit(APPLICATION, request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
 
         List<EventShortDto> eventShortDto = events.stream()
                 .map(eventStream -> EventMapper.mapToEventShortDto(eventStream, viewsMpa))
@@ -350,7 +350,7 @@ public class EventServiceImpl implements EventService {
 
         Map<Integer, Long> viewsMpa = getViews(List.of(event));
 
-        statsClient.saveHit(thisService, request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
+        statsClient.saveHit(APPLICATION, request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
 
         return EventMapper.toEventFullDto(event, viewsMpa);
     }

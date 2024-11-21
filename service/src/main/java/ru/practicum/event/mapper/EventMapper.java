@@ -5,7 +5,7 @@ import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
-import ru.practicum.event.dto.NewEventDto;
+import ru.practicum.event.dto.CreateEventDto;
 import ru.practicum.event.dto.UpdateEventRequest;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.Location;
@@ -19,20 +19,20 @@ import java.util.Optional;
 
 public class EventMapper {
 
-    public static Event createToEvent(NewEventDto newEventDto, Category category, User initiator) {
+    public static Event createToEvent(CreateEventDto createEventDto, Category category, User initiator) {
         return Event.builder()
-                .title(newEventDto.getTitle())
-                .annotation(newEventDto.getAnnotation())
+                .title(createEventDto.getTitle())
+                .annotation(createEventDto.getAnnotation())
                 .category(category)
                 .confirmedRequests(0)
-                .description(newEventDto.getDescription())
-                .eventDate(DateTimeAdapter.stringToLocalDateTime(newEventDto.getEventDate()))
+                .description(createEventDto.getDescription())
+                .eventDate(DateTimeAdapter.stringToLocalDateTime(createEventDto.getEventDate()))
                 .initiator(initiator)
-                .location(LocationMapper.mapLocation(newEventDto.getLocation()))
-                .paid(Optional.ofNullable(newEventDto.getPaid()).orElse(false))
-                .participantLimit(Optional.ofNullable(newEventDto.getParticipantLimit()).orElse(0))
+                .location(LocationMapper.mapLocation(createEventDto.getLocation()))
+                .paid(Optional.ofNullable(createEventDto.getPaid()).orElse(false))
+                .participantLimit(Optional.ofNullable(createEventDto.getParticipantLimit()).orElse(0))
                 .createdOn(LocalDateTime.now())
-                .requestModeration(Optional.ofNullable(newEventDto.getRequestModeration()).orElse(true))
+                .requestModeration(Optional.ofNullable(createEventDto.getRequestModeration()).orElse(true))
                 .state(State.PENDING)
                 .build();
     }

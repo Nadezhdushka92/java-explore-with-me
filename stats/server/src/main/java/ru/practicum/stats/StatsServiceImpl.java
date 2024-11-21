@@ -90,8 +90,8 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public void saveHit(ElementStatsSaveDto statsSaveDto) {
         statsSaveDto.setTimestamp(LocalDateTime.now());
-        Stats newElementStats = ElementStatsMapper.mapToStats(statsSaveDto);
-        statsRepository.save(newElementStats);
+        Stats createElementStats = ElementStatsMapper.mapToStats(statsSaveDto);
+        statsRepository.save(createElementStats);
         log.info("Hit saved");
     }
 }

@@ -18,7 +18,7 @@ public class StatsController {
             @RequestParam String start,
             @RequestParam String end,
             @RequestParam(required = false) List<String> uris,
-            @RequestParam(required = false, defaultValue = "false") boolean unique
+            @RequestParam(defaultValue = "false") boolean unique
     ) {
         return statsService.getStatsFromService(start, end, uris, unique);
     }

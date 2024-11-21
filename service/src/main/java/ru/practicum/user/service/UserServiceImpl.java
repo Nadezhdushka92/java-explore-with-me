@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.user.dto.NewUserRequest;
+import ru.practicum.user.dto.CreateUserRequest;
 import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.model.User;
@@ -42,15 +42,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto addUser(NewUserRequest user) {
+    public UserDto addUser(CreateUserRequest user) {
         log.info("Начало работы метода addUser");
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new ConflictException("Такая почта уже существует", "");
         }
 
-        User newUser = userRepository.save(UserMapper.mapToUser(user));
+        User addedUser = userRepository.save(UserMapper.mapToUser(user));
 
-        return UserMapper.mapToUserDto(newUser);
+        return UserMapper.mapToUserDto(addedUser);
     }
 
     @Override

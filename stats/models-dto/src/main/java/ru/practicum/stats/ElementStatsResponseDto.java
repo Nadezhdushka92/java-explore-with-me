@@ -15,6 +15,7 @@ public class ElementStatsResponseDto {
     @NotNull
     @NotEmpty
     private String app;
+
     @NotNull
     @NotEmpty
     private String uri;

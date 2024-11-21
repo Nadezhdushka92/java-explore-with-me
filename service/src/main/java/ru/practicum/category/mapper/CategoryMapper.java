@@ -1,7 +1,7 @@
 package ru.practicum.category.mapper;
 
 import ru.practicum.category.dto.CategoryDto;
-import ru.practicum.category.dto.NewCategoryDto;
+import ru.practicum.category.dto.CreateCategoryDto;
 import ru.practicum.category.model.Category;
 
 public class CategoryMapper {
@@ -12,9 +12,9 @@ public class CategoryMapper {
                 .build();
     }
 
-    public static Category mapCategory(NewCategoryDto newCategoryDto) {
+    public static Category mapCategory(CreateCategoryDto createCategoryDto) {
         return Category.builder()
-                .name(newCategoryDto.getName())
+                .name(createCategoryDto.getName())
                 .build();
     }
 }

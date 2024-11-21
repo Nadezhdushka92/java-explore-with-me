@@ -14,7 +14,7 @@ import jakarta.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class NewCategoryDto {
+public class CreateCategoryDto {
     @Size(min = 1, max = 50)
     @NotEmpty
     @NotNull

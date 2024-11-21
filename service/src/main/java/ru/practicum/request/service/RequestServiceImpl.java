@@ -64,17 +64,17 @@ public class RequestServiceImpl implements RequestService {
         User requester = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("User not found", ""));
 
-        Request newRequest = RequestMapper.createRequest(requester, event);
+        Request createdRequest = RequestMapper.createRequest(requester, event);
 
         log.info(event.getRequestModeration().toString());
         if (participantLimit == 0 || !event.getRequestModeration()) {
-            newRequest.setStatus(RequestStatus.CONFIRMED);
+            createdRequest.setStatus(RequestStatus.CONFIRMED);
             int confirmedRequestsEvent = event.getConfirmedRequests() + 1;
             event.setConfirmedRequests(confirmedRequestsEvent);
             eventRepository.save(event);
         }
 
-        Request saveRequest = requestRepository.save(newRequest);
+        Request saveRequest = requestRepository.save(createdRequest);
         log.info("Saved request userId:{}, eventId:{}",
                 saveRequest.getRequester().getId(), saveRequest.getEvent().getId());
 
@@ -88,8 +88,8 @@ public class RequestServiceImpl implements RequestService {
 
         request.setStatus(RequestStatus.CANCELED);
 
-        Request newRequest = requestRepository.save(request);
+        Request canceledRequest = requestRepository.save(request);
 
-        return RequestMapper.mapToParticipationRequestDto(newRequest);
+        return RequestMapper.mapToParticipationRequestDto(canceledRequest);
     }
 }

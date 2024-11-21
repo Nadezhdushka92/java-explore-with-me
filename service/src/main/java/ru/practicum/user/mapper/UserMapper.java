@@ -1,6 +1,6 @@
 package ru.practicum.user.mapper;
 
-import ru.practicum.user.dto.NewUserRequest;
+import ru.practicum.user.dto.CreateUserRequest;
 import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.dto.UserShortDto;
 import ru.practicum.user.model.User;
@@ -33,11 +33,11 @@ public class UserMapper {
                 .build();
     }
 
-    public static User mapToUser(NewUserRequest newUser) {
+    public static User mapToUser(CreateUserRequest createUserRequest) {
 
         return User.builder()
-                .email(newUser.getEmail())
-                .name(newUser.getName())
+                .email(createUserRequest.getEmail())
+                .name(createUserRequest.getName())
                 .build();
     }
 }

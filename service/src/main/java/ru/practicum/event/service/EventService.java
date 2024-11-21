@@ -5,7 +5,7 @@ import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.event.dto.EventRequestStatusUpdateResult;
 import ru.practicum.event.dto.EventShortDto;
-import ru.practicum.event.dto.NewEventDto;
+import ru.practicum.event.dto.CreateEventDto;
 import ru.practicum.event.dto.UpdateEventRequest;
 import ru.practicum.request.dto.ParticipationRequestDto;
 
@@ -15,7 +15,7 @@ public interface EventService {
 
     List<EventShortDto> getEvents(int userId, int from, int size);
 
-    EventFullDto createEvent(int userId, NewEventDto newEventDto);
+    EventFullDto createEvent(int userId, CreateEventDto createEventDto);
 
     EventFullDto getEvent(int userId, int eventId);
 
@@ -26,12 +26,12 @@ public interface EventService {
     EventRequestStatusUpdateResult updateStatusRequestForEvent(int userId, int eventId,
                                                                EventRequestStatusUpdateRequest statusUpdateRequest);
 
-    List<EventFullDto> getAdminEvents(List<Integer> users, List<String> states, List<Integer> categories, String rangeStart,
+    List<EventFullDto> getListAdminEvents(List<Integer> users, List<String> states, List<Integer> categories, String rangeStart,
                                       String rangeEnd, int from, int size);
 
     EventFullDto patchAdminEvent(int eventId, UpdateEventRequest updateEvent);
 
-    List<EventShortDto> getPublicEvents(String text,
+    List<EventShortDto> getListPublicEvents(String text,
                                         List<Integer> categories,
                                         Boolean paid,
                                         String rangeStart,

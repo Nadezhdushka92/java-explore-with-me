@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class NewUserRequest {
+public class CreateUserRequest {
     @NotNull
     @NotEmpty
     @NotBlank

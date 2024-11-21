@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.compilation.dto.CompilationDto;
-import ru.practicum.compilation.dto.NewCompilationDto;
+import ru.practicum.compilation.dto.CreateCompilationDto;
 import ru.practicum.compilation.dto.UpdateCompilationRequest;
 import ru.practicum.compilation.mapper.CompilationMapper;
 import ru.practicum.compilation.model.Compilation;
@@ -27,13 +27,13 @@ public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
 
-    public CompilationDto createCompilation(NewCompilationDto newCompilation) {
+    public CompilationDto createCompilation(CreateCompilationDto createCompilationDto) {
         Set<Event> events = new HashSet<>();
-        if (newCompilation.getEvents() != null && !newCompilation.getEvents().isEmpty()) {
-            events = eventRepository.findByIdIn(newCompilation.getEvents());
+        if (createCompilationDto.getEvents() != null && !createCompilationDto.getEvents().isEmpty()) {
+            events = eventRepository.findByIdIn(createCompilationDto.getEvents());
         }
 
-        Compilation compilationBuilder = CompilationMapper.newCompilation(newCompilation, events);
+        Compilation compilationBuilder = CompilationMapper.createToCompilation(createCompilationDto, events);
 
         Compilation compilation = compilationRepository.save(compilationBuilder);
 
@@ -51,9 +51,9 @@ public class CompilationServiceImpl implements CompilationService {
 
         Compilation compilation = CompilationMapper.updateCompilation(updateCompilation, oldCompilation, events);
 
-        Compilation newCompilation = compilationRepository.save(compilation);
+        Compilation updatedCompilation = compilationRepository.save(compilation);
 
-        return CompilationMapper.toDto(newCompilation);
+        return CompilationMapper.toDto(updatedCompilation);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public List<CompilationDto> getCompilations(Boolean pinned, int from, int size) {
+    public List<CompilationDto> getListCompilations(Boolean pinned, int from, int size) {
         Pageable pageable = PageRequest.of(from > 0 ? from / size : 0, size);
         List<Compilation> page = compilationRepository.findByPinned(pinned, pageable);
 

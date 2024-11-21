@@ -1,7 +1,7 @@
 package ru.practicum.compilation.mapper;
 
 import ru.practicum.compilation.dto.CompilationDto;
-import ru.practicum.compilation.dto.NewCompilationDto;
+import ru.practicum.compilation.dto.CreateCompilationDto;
 import ru.practicum.compilation.dto.UpdateCompilationRequest;
 import ru.practicum.compilation.model.Compilation;
 import ru.practicum.event.mapper.EventMapper;
@@ -24,12 +24,12 @@ public class CompilationMapper {
                 .build();
     }
 
-    public static Compilation newCompilation(NewCompilationDto newCompilation, Set<Event> events) {
+    public static Compilation createToCompilation(CreateCompilationDto createCompilation, Set<Event> events) {
 
         return Compilation.builder()
                 .events(events)
-                .pinned(newCompilation.getPinned() != null ? newCompilation.getPinned() : false)
-                .title(newCompilation.getTitle())
+                .pinned(createCompilation.getPinned() != null ? createCompilation.getPinned() : false)
+                .title(createCompilation.getTitle())
                 .build();
     }
 

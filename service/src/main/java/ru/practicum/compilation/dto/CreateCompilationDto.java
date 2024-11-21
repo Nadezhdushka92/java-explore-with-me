@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class NewCompilationDto {
+public class CreateCompilationDto {
     private List<Integer> events;
     private Boolean pinned;
 

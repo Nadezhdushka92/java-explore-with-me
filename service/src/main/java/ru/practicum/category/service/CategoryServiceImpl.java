@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.category.dto.CategoryDto;
-import ru.practicum.category.dto.NewCategoryDto;
+import ru.practicum.category.dto.CreateCategoryDto;
 import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
@@ -26,16 +26,16 @@ public class CategoryServiceImpl implements CategoryService {
     private final EventRepository eventRepository;
 
     @Override
-    public CategoryDto createCategory(NewCategoryDto categoryDto) {
+    public CategoryDto createCategory(CreateCategoryDto categoryDto) {
         if (categoryRepository.existsByName(categoryDto.getName())) {
             throw new ConflictException("Name should be unique", "");
         }
 
-        Category newCategory = CategoryMapper.mapCategory(categoryDto);
-        categoryRepository.save(newCategory);
+        Category createdCategory = CategoryMapper.mapCategory(categoryDto);
+        categoryRepository.save(createdCategory);
 
-        log.info("Create new category {}", newCategory);
-        return CategoryMapper.mapCategoryDto(newCategory);
+        log.info("Create new category {}", createdCategory);
+        return CategoryMapper.mapCategoryDto(createdCategory);
     }
 
     @Override
@@ -63,10 +63,10 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         category.setName(categoryDto.getName());
-        Category newCategory = categoryRepository.save(category);
+        Category updatedCategory = categoryRepository.save(category);
 
         log.info("Update info about category with catId {}", catId);
-        return CategoryMapper.mapCategoryDto(newCategory);
+        return CategoryMapper.mapCategoryDto(updatedCategory);
     }
 
     @Override
