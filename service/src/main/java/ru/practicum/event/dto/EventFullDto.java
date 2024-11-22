@@ -3,9 +3,12 @@ package ru.practicum.event.dto;
 
 import lombok.*;
 import ru.practicum.category.dto.CategoryDto;
+import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.user.dto.UserShortDto;
 
 import jakarta.validation.constraints.*;
+
+import java.util.List;
 
 
 @SuppressWarnings("checkstyle:Regexp")
@@ -38,6 +41,8 @@ public class EventFullDto {
     @Size(min = 3, max = 120)
     @NotBlank
     private String title;
+
+    private List<CommentDto> comments;
 
     @NotNull
     private String createdOn;

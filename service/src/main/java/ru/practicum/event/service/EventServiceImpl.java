@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 import ru.practicum.adapter.DateTimeAdapter;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
+import ru.practicum.comment.dto.CommentDto;
+import ru.practicum.comment.mapper.CommentMapper;
+import ru.practicum.comment.model.Comment;
+import ru.practicum.comment.repository.CommentRepository;
 import ru.practicum.event.dto.*;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.mapper.LocationMapper;
@@ -53,6 +57,8 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
     private final JPAQueryFactory queryFactory;
+    private final CommentRepository commentRepository;
+
 
     @Override
     public List<EventShortDto> getEvents(int userId, int from, int size) {
@@ -61,10 +67,11 @@ public class EventServiceImpl implements EventService {
         log.info("Получение страницы ивентов");
         List<Event> categoryPage = eventRepository.findByInitiatorId(userId, pageable);
         Map<Integer, Long> viewsMap = getViews(categoryPage);
+        Map<Integer, List<CommentDto>> comments = getComments(categoryPage);
 
         log.info("Выполнение метода getEvents");
         return categoryPage.stream()
-                .map(event -> EventMapper.mapToEventShortDto(event, viewsMap))
+                .map(event -> EventMapper.mapToEventShortDto(event, viewsMap, comments))
                 .toList();
     }
 
@@ -82,12 +89,9 @@ public class EventServiceImpl implements EventService {
 
         locationRepository.save(LocationMapper.mapLocation(createEventDto.getLocation()));
 
-        Event createdEvent = EventMapper.createToEvent(createEventDto, category, initiator);
-        Event createEvent = eventRepository.save(createdEvent);
+        Event newEvent = EventMapper.createToEvent(createEventDto, category, initiator);
 
-        Map<Integer, Long> viewsMap = getViews(List.of(createEvent));
-
-        return EventMapper.toEventFullDto(createEvent, viewsMap);
+        return eventSaveAndMappingFullDto(newEvent);
     }
 
     @Override
@@ -96,8 +100,9 @@ public class EventServiceImpl implements EventService {
                 new NotFoundException("Event not found", ""));
 
         Map<Integer, Long> viewsMap = getViews(List.of(event));
+        Map<Integer, List<CommentDto>> comments = getComments(List.of(event));
 
-        return EventMapper.toEventFullDto(event, viewsMap);
+        return EventMapper.toEventFullDto(event, viewsMap, comments);
     }
 
     @Override
@@ -125,11 +130,8 @@ public class EventServiceImpl implements EventService {
         }
 
         Event updatedEvent = EventMapper.privateUpdateEvent(event, updateEventRequest, category, state);
-        Event savedEvent = eventRepository.save(updatedEvent);
 
-        Map<Integer, Long> viewsMap = getViews(List.of(savedEvent));
-
-        return EventMapper.toEventFullDto(savedEvent, viewsMap);
+        return eventSaveAndMappingFullDto(updatedEvent);
     }
 
     @Override
@@ -236,10 +238,11 @@ public class EventServiceImpl implements EventService {
                 .fetch();
 
         Map<Integer, Long> viewsMap = getViews(events);
-        return events.stream()
-                .map(eventStream -> EventMapper.toEventFullDto(eventStream, viewsMap))
-                .toList();
+        Map<Integer, List<CommentDto>> comments = getComments(events);
 
+        return events.stream()
+                .map(eventStream -> EventMapper.toEventFullDto(eventStream, viewsMap, comments))
+                .toList();
     }
 
     @SuppressWarnings("checkstyle:Regexp")
@@ -261,10 +264,8 @@ public class EventServiceImpl implements EventService {
                 : null;
 
         Event updatedEvent = EventMapper.adminUpdateEvent(event, updateEvent, category, state, location);
-        Event savedEvent = eventRepository.save(updatedEvent);
-        Map<Integer, Long> viewsMap = getViews(List.of(savedEvent));
 
-        return EventMapper.toEventFullDto(savedEvent, viewsMap);
+        return eventSaveAndMappingFullDto(updatedEvent);
     }
 
     @Override
@@ -317,9 +318,10 @@ public class EventServiceImpl implements EventService {
 
         // Сохранение статистики
         statsClient.saveHit(APPLICATION, request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
+        Map<Integer, List<CommentDto>> comments = getComments(events);
 
         List<EventShortDto> eventShortDto = events.stream()
-                .map(eventStream -> EventMapper.mapToEventShortDto(eventStream, viewsMpa))
+                .map(eventStream -> EventMapper.mapToEventShortDto(eventStream, viewsMpa, comments))
                 .toList();
 
         // Сортировка событий
@@ -351,8 +353,9 @@ public class EventServiceImpl implements EventService {
         Map<Integer, Long> viewsMpa = getViews(List.of(event));
 
         statsClient.saveHit(APPLICATION, request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
+        Map<Integer, List<CommentDto>> comments = getComments(List.of(event));
 
-        return EventMapper.toEventFullDto(event, viewsMpa);
+        return EventMapper.toEventFullDto(event, viewsMpa, comments);
     }
 
     private Map<Integer, Long> getViews(List<Event> events) {
@@ -446,5 +449,29 @@ public class EventServiceImpl implements EventService {
         }
 
         return predicate;
+    }
+
+    private Map<Integer, List<CommentDto>> getComments(List<Event> events) {
+        List<Integer> eventsId = events.stream()
+                .map(Event::getId)
+                .toList();
+
+        List<Comment> comments = commentRepository.findCommentsByEvents(eventsId);
+
+        return comments.stream()
+                .map(CommentMapper::mapToCommentDto)
+                .collect(Collectors.groupingBy(
+                        CommentDto::getEvent,
+                        Collectors.toList()
+                ));
+    }
+
+    private EventFullDto eventSaveAndMappingFullDto(Event event) {
+        Event savedEvent = eventRepository.save(event);
+
+        Map<Integer, Long> viewsMap = getViews(List.of(savedEvent));
+        Map<Integer, List<CommentDto>> comments = getComments(List.of(savedEvent));
+
+        return EventMapper.toEventFullDto(savedEvent, viewsMap, comments);
     }
 }
