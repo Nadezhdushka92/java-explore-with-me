@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 public class CommentMapper {
 
-    public static Comment createCommentDto (CreateCommentDto createCommentDto, User user, Event event) {
+    public static Comment createCommentDto(CreateCommentDto createCommentDto, User user, Event event) {
         return Comment.builder()
                 .creator(user)
                 .event(event)
@@ -22,7 +22,7 @@ public class CommentMapper {
                 .build();
     }
 
-    public static CommentDto mapToCommentDto (Comment comment) {
+    public static CommentDto mapToCommentDto(Comment comment) {
         return CommentDto.builder()
                 .id(comment.getId())
                 .creator(comment.getCreator().getId())
