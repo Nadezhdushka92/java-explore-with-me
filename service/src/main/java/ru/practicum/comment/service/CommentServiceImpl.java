@@ -43,7 +43,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto updateComment(int userId, int eventId, int commentId, CreateCommentDto createCommentDto) {
         User user = checkAndReturnUser(userId);
         Event event = checkAndReturnEvent(eventId);
-        Comment comment = CommentMapper.UpdateCommentDto(createCommentDto, user, event, commentId);
+        Comment comment = CommentMapper.updateCommentDto(createCommentDto, user, event, commentId);
 
         commentRepository.save(comment);
 

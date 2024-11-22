@@ -11,6 +11,7 @@ import ru.practicum.user.model.User;
 import java.time.LocalDateTime;
 
 public class CommentMapper {
+
     public static Comment createCommentDto (CreateCommentDto createCommentDto, User user, Event event) {
         return Comment.builder()
                 .creator(user)
@@ -32,7 +33,7 @@ public class CommentMapper {
                 .build();
     }
 
-    public static Comment UpdateCommentDto (CreateCommentDto createCommentDto, User user, Event event, int commentId) {
+    public static Comment updateCommentDto(CreateCommentDto createCommentDto, User user, Event event, int commentId) {
         return Comment.builder()
                 .id(commentId)
                 .creator(user)
