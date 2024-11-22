@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.adapter.DateTimeAdapter;
+import ru.practicum.stats.exception.DataNotValidException;
 import ru.practicum.stats.mapper.ElementStatsMapper;
 import ru.practicum.stats.model.Stats;
 
@@ -30,8 +31,11 @@ public class StatsServiceImpl implements StatsService {
         LocalDateTime endTime = DateTimeAdapter.stringToLocalDateTime(
                 URLDecoder.decode(end, StandardCharsets.UTF_8));
 
-        List<Stats> stats = fetchStats(startTime, endTime, uris, unique);
-        return mapToResponseDto(stats);
+        if (startTime.isAfter(endTime)) {
+            throw new DataNotValidException("Incorrect Time");
+        }
+
+        return fetchStats(startTime, endTime, uris, unique);
     }
 
     //Метод для преобразования ответа в ElementStatsResponseDto
@@ -65,7 +69,7 @@ public class StatsServiceImpl implements StatsService {
     }
 
     //Получение статистики из БД
-    private List<Stats> fetchStats(LocalDateTime startTime, LocalDateTime endTime, List<String> uris, boolean unique) {
+    private List<ElementStatsResponseDto> fetchStats(LocalDateTime startTime, LocalDateTime endTime, List<String> uris, boolean unique) {
             boolean hasUris = (uris != null && !uris.isEmpty());
 
             if (unique) {
@@ -85,9 +89,9 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public void saveHit(ElementStatsSaveDto statsSaveDto) {
-        statsSaveDto.setCreatedDate(LocalDateTime.now());
-        Stats newElementStats = ElementStatsMapper.mapToStats(statsSaveDto);
-        statsRepository.save(newElementStats);
-        log.info("Хит сохранен в БД");
+        statsSaveDto.setTimestamp(LocalDateTime.now());
+        Stats createElementStats = ElementStatsMapper.mapToStats(statsSaveDto);
+        statsRepository.save(createElementStats);
+        log.info("Hit saved");
     }
 }

@@ -1,47 +1,58 @@
 package ru.practicum.stats;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+import ru.practicum.adapter.DateTimeAdapter;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Validated
 @Service
+@Slf4j
 public class StatsClientImpl implements StatsClient {
     private final RestTemplate restTemplate;
 
-    @Value("${stats-server.url}")
-    private String serverUri;
+    private final String serverUri = "http://stats-server:9090";
 
     @Override
-    public List<ElementStatsResponseDto> getStats(@NotNull @NotEmpty String start,
-                                                  @NotNull @NotEmpty String end,
-                                                  List<String> uris, Boolean unique) {
+    public List<ElementStatsResponseDto> getStats(LocalDateTime start,
+                                                  LocalDateTime end,
+                                                  List<String> uris,
+                                                  Boolean unique) {
 
-        StringBuilder url = new StringBuilder(serverUri + "/stats?start=" +
-                                              codingTime(start) + "&end=" + codingTime(end));
+        if (start == null) {
+            start = LocalDateTime.of(2000, 2, 1, 12, 0);
+        }
+        if (end == null) {
+            end = LocalDateTime.of(2047, 2, 1, 12, 0);
+        }
+
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(serverUri + "/stats");
+
+        uriBuilder.queryParam("start", codingTime(start));
+
+        uriBuilder.queryParam("end", codingTime(end));
 
         if (uris != null && !uris.isEmpty()) {
-            url.append("&uris=").append(String.join(",", uris));
+            String uriString = String.join(",", uris);
+            uriBuilder.queryParam("uris", uriString);
         }
+
         if (unique != null) {
-            url.append("&unique=").append(unique);
+            uriBuilder.queryParam("unique", unique);
         }
+
+        String finalUrl = uriBuilder.toUriString();
 
         try {
             ResponseEntity<List<ElementStatsResponseDto>> response = restTemplate.exchange(
-                    url.toString(),
+                    finalUrl,
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<>() {
@@ -50,30 +61,28 @@ public class StatsClientImpl implements StatsClient {
 
             return response.getBody();
         } catch (Exception e) {
-            System.err.println("Ошибка при получении статистики: " + e.getMessage());
+            log.error("Ошибка при получении статистики: {}", e.getMessage(), e);
             return List.of();
         }
     }
 
-    private String codingTime(String time) {
-        return URLEncoder.encode(time, StandardCharsets.UTF_8);
-
+    private String codingTime(LocalDateTime time) {
+        return DateTimeAdapter.toString(time);
     }
 
     @Override
-    public void saveHit(@NotNull @NotEmpty String app,
-                        @NotNull @NotEmpty String uri,
-                        @NotNull @NotEmpty String ip,
-                        @NotNull LocalDateTime createDate) {
+    public void saveHit(String app,
+                        String uri,
+                        String ip,
+                        LocalDateTime timestamp) {
         String url = serverUri + "/hit";
 
         ElementStatsSaveDto statsSaveDto = ElementStatsSaveDto.builder()
                 .app(app)
                 .uri(uri)
                 .ip(ip)
-                .createdDate(createDate)
+                .timestamp(timestamp)
                 .build();
-
         HttpEntity<ElementStatsSaveDto> entity = createHttpEntity(statsSaveDto);
 
         try {
