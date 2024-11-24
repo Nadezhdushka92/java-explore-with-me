@@ -3,6 +3,7 @@ package ru.practicum.event.mapper;
 import ru.practicum.adapter.DateTimeAdapter;
 import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
+import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.CreateEventDto;
@@ -14,6 +15,7 @@ import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -53,7 +55,7 @@ public class EventMapper {
                 .build();
     }
 
-    public static EventFullDto toEventFullDto(Event event, Map<Integer, Long> viewsMap) {
+    public static EventFullDto toEventFullDto(Event event, Map<Integer, Long> viewsMap, Map<Integer, List<CommentDto>> comments) {
         long views = (viewsMap != null && viewsMap.containsKey(event.getId())) ? viewsMap.get(event.getId()) : 0L;
 
         return EventFullDto.builder()
@@ -73,11 +75,15 @@ public class EventMapper {
                 .state(event.getState().name())
                 .views(views)
                 .publishedOn(event.getPublishedOn() != null ? DateTimeAdapter.toString(event.getPublishedOn()) : null)
+                .comments(comments != null && comments.containsKey(event.getId())
+                        ? comments.get(event.getId())
+                        : List.of())
                 .build();
     }
 
-    public static EventShortDto mapToEventShortDto(Event event, Map<Integer, Long> viewsMap) {
+    public static EventShortDto mapToEventShortDto(Event event, Map<Integer, Long> viewsMap,  Map<Integer, List<CommentDto>> comments) {
         long views = (viewsMap != null && viewsMap.containsKey(event.getId())) ? viewsMap.get(event.getId()) : 0L;
+        List<CommentDto> listComments = (comments != null && comments.containsKey(event.getId())) ? comments.get(event.getId()) : List.of();
 
         return EventShortDto.builder()
                 .id(event.getId())
@@ -89,6 +95,7 @@ public class EventMapper {
                 .paid(event.getPaid())
                 .title(event.getTitle())
                 .views(views)
+                .comments(listComments)
                 .build();
     }
 
